@@ -21,10 +21,16 @@
 
 <template name="post">
   <div class="post">
+    {{> history_graph history}}
+    <br>
     {{latest.score}} : <a href="{{latest.url}}">{{latest.title}}</a>
     <br>
-    {{latest._createdAt}}
+    Submitted: {{epochToDate latest.created_utc}} || First Sighted: {{_createdAt}}
     <hr>
   </div>
+</template>
+
+<template name="history_graph">
+  <canvas class='history-graph'></canvas>
 </template>
 
