@@ -1,0 +1,30 @@
+<head>
+  <title>Reddit Posts</title>
+</head>
+
+<body>
+  {{> body}}
+</body>
+
+<template name="body">
+  <h1>Meteor Reddit Scraper</h1>
+  {{> post_list}}
+</template>
+
+
+<template name="post_list">
+  <h2>Posts:</h2>
+  {{#each posts}}
+    {{> post}}
+  {{/each}}
+</template>
+
+<template name="post">
+  <div class="post">
+    {{latest.score}} : <a href="{{latest.url}}">{{latest.title}}</a>
+    <br>
+    {{latest._createdAt}}
+    <hr>
+  </div>
+</template>
+
