@@ -1,7 +1,9 @@
 
+
+
 @filters =
   historyPost : (post) ->
-    fields = ['score', 'downs', 'ups', 'num_comments', '_createdAt','edited','banned_by']
+    fields = ['score', 'downs', 'ups', 'num_comments', '_createdAt','edited','banned_by','hotness','rank']
     result = {}
     for field in fields
       if post[field] 
@@ -24,7 +26,6 @@ insertFrame = (postData) ->
     collections.Posts.update({_id:postDocument._id},{$set:{latest:postData}})
   
   postDocumentId = postDocument._id || postDocument
-  # calculate top, bottom etc,
   collections.Posts.update({_id:postDocumentId},{$push:{history:filters.historyPost postData}})
   return newInsert 
 
@@ -36,25 +37,25 @@ scrapeReddit = ->
     , (err,response) -> callback err, response
   theTime = new Date()
   newPosts = 0
-  for post in req.result.body.data.children
+  for post, i in req.result.body.data.children
     post.data._createdAt = theTime
+    post.data.rank = i + 1
+    post.data.hotness = helpers.calculateHotness post.data.score, post.data.created_utc
+
+    
     if insertFrame post.data
       newPosts++
 
-  completedScrape = 
+  collections.Scrapes.insert 
     totalPosts: totalPosts()
     newPosts: newPosts
     recorded: req.result.body.data.children.length
     _createdAt: theTime
 
-  collections.Scrapes.insert completedScrape
 
 Meteor.startup ->
-  # Meteor.setTimeout ->
-    scrapeReddit()
-    Meteor.setInterval ->
-      scrapeReddit()
-    # , 1000 * 10 # second intervals
-    , 1000 * 10 # default to 90 seconds
-  # , 10 * 1000 # 10 second delay
+  scrapeReddit()
+  Meteor.setInterval ->
+   scrapeReddit()
+  , 60 * 1000 # default to 1 minute
 

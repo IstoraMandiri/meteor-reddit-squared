@@ -9,7 +9,7 @@
 if Meteor.isServer
 
   Meteor.publish "latestPosts", -> 
-    collections.Posts.find({},{sort:{'latest.score':-1},limit:20})
+    collections.Posts.find({},{sort:{'latest._createdAt':-1,'latest.rank':1},limit:35})
 
 if Meteor.isClient
   # public subscriptions

@@ -7,13 +7,11 @@
 </body>
 
 <template name="body">
-  <h1>Meteor Reddit Scraper</h1>
   {{> post_list}}
 </template>
 
 
 <template name="post_list">
-  <h2>Posts:</h2>
   {{#each posts}}
     {{> post}}
   {{/each}}
@@ -21,13 +19,9 @@
 
 <template name="post">
   <div class="post">
+    <div class='description'>{{latest.rank}}] {{latest.score}} &uArr; <a target="_blank" href="{{latest.url}}">{{latest.title}}</a></div>
     {{> history_graph history}}
     <br>
-    {{latest.score}} : <a href="{{latest.url}}">{{latest.title}}</a>
-    <br>
-    Submitted: {{epochToDate latest.created_utc}} || First Sighted: {{_createdAt}}
-    <hr>
-  </div>
 </template>
 
 <template name="history_graph">

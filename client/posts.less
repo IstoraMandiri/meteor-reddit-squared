@@ -1,0 +1,47 @@
+// .history-tile{
+//   float:left;
+//   width:5px;
+//   background:red;
+//   background:none;
+//   border-top:1px solid red;
+// }
+// .post{
+//   position:absolute;
+//   bottom:0;
+//   left:0;
+// }
+
+body{
+  background:black;
+  color:white;
+  margin:0;
+  font-family:'Helvetica Neue',Helvetica,sans-serif;
+}
+a{
+  color:white;
+}
+
+.post{
+  position:relative;
+  canvas{
+    margin-left:-20px;
+  }
+  .description{
+    font-size:1.3em;
+    display:none;
+    position:absolute;
+    padding:10px;
+    background:rgba(0,0,0,.8)
+  }
+  a{
+    text-decoration: none;
+    font-weight:100;
+  }
+  &:hover{
+    background:#333;
+    text-shadow:0px 1px 2px rgba(0,0,0,.6);
+    .description{
+      display:block;
+    }
+  }
+}
