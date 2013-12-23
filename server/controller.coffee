@@ -34,7 +34,9 @@ scrapeReddit = ->
     request.get
       url: 'http://www.reddit.com/.json?limit=100'
       json: true
-    , (err,response) -> callback err, response
+    , (err,response) -> 
+      console.log err if err?
+      callback err, response
   theTime = new Date()
   newPosts = 0
   for post, i in req.result.body.data.children
@@ -48,14 +50,26 @@ scrapeReddit = ->
 
   collections.Scrapes.insert 
     totalPosts: totalPosts()
-    newPosts: newPosts
+    newPosts: newPosts 
     recorded: req.result.body.data.children.length
     _createdAt: theTime
 
+  console.log 'completed scrape'
 
-# Meteor.startup ->
-#   scrapeReddit()
-#   Meteor.setInterval ->
-#    scrapeReddit()
-#   , 60 * 1000 # default to 1 minute
+
+Meteor.startup -> 
+
+  nextTick = ->
+    nextMinute = Math.ceil(new Date()/(5 * 1000)) * (5 * 1000)
+    return nextMinute - new Date()
+
+  scrapeCycle = ->
+    console.log 'nt:', nextTick(), ' || now:', new Date()
+    Meteor.setTimeout -> 
+      try scrapeReddit() 
+      scrapeCycle()
+     
+    , nextTick() # default to 1 minute
+
+  scrapeCycle()
 

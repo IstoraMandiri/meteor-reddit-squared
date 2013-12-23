@@ -4,6 +4,7 @@ subredditColorString = 'subreddit_id' # subreddit or +_id ?
 Handlebars.registerHelper 'epochToDate', (epoch) -> new Date(epoch*1000);
 
 drawMovementGraph = (canvas, post) ->
+  console.log 'drawing'
   history = post.history
   height = 50
   padding = 4
@@ -55,22 +56,20 @@ drawMovementGraph = (canvas, post) ->
   ctx.stroke();
   ctx.closePath();
 
-  # draw circle
-  latestSnapshot = history[history.length-1]
   
   # xPos = (history.length)*6 # plot by time?
-  xPos = (canvas.width + (i+1)*6) - ((history.length+1)*6)
+  xPos = (canvas.width + (i+1)*6) - ((history.length+1)*6) - 6
+  yPos = canvas.height - (((history[history.length-1].score - yLimits.lower) * scale) + padding)
 
   ctx.beginPath();
-  ctx.arc(xPos - 6, ((snapshot.score - yLimits.lower) * scale) + padding, thickness+1, 0, 2 * Math.PI, false);
+  ctx.arc(xPos, yPos, thickness+1, 0, 2 * Math.PI, false);
   ctx.fillStyle = color;
   ctx.fill();
 
+  console.log 'completed drawing'
 
 
-
-Template.score_line_list.posts = -> 
-  collections.Posts.find({},{sort:{'latest._createdAt':-1,'latest.rank':1}}).fetch()
+Template.score_line_list.posts = -> collections.Posts.find({},{sort:{'latest.rank':1}}).fetch()
 
 Template.score_line.subredditColor = -> helpers.generateColourFromString @.latest[subredditColorString]
 
