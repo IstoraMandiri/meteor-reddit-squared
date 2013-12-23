@@ -1,9 +1,14 @@
 
-drawMovementGraph = (canvas, history) ->
-  height = 30
-  padding = 3
-  color = '#fff'
-  thickness = 4
+subredditColorString = 'subreddit_id' # subreddit or +_id ?
+
+Handlebars.registerHelper 'epochToDate', (epoch) -> new Date(epoch*1000);
+
+drawMovementGraph = (canvas, post) ->
+  history = post.history
+  height = 50
+  padding = 4
+  color = helpers.generateColourFromString post.latest[subredditColorString]
+  thickness = 3
 
   ctx = canvas.getContext '2d' 
   canvas.width = $(canvas).parent().width()
@@ -14,22 +19,33 @@ drawMovementGraph = (canvas, history) ->
 
   ctx.beginPath();
   
-  # calculate base / top
-  limits =
+  #
+  # for time based
+  #
+  # xLimits = 
+  #   first:
+  #   last:   
+
+  yLimits =
     upper:0
     lower:Infinity
   
   for snapshot in history
-    limits.upper = snapshot.score if snapshot.score > limits.upper
-    limits.lower = snapshot.score if snapshot.score < limits.lower
+    yLimits.upper = snapshot.score if snapshot.score > yLimits.upper
+    yLimits.lower = snapshot.score if snapshot.score < yLimits.lower
 
-  limitDifference = (limits.upper - limits.lower) || 1
+  limitDifference = (yLimits.upper - yLimits.lower) || 1
 
   scale = (canvas.height - padding*2) / limitDifference
 
   for snapshot, i in history
-    xPos = (i+1)*10# plot by time please
-    yPos = ((snapshot.score - limits.lower) * scale) + padding
+    # from left
+    # xPos = (i+1)*6# plot by time please
+    # from right
+    xPos = (canvas.width + (i+1)*6) - ((history.length+1)*6)
+        
+    yPos = ((snapshot.score - yLimits.lower) * scale) + padding
+    
     if i is 0 # first
       ctx.moveTo xPos, yPos
     else
@@ -41,19 +57,27 @@ drawMovementGraph = (canvas, history) ->
 
   # draw circle
   latestSnapshot = history[history.length-1]
+  
+  # xPos = (history.length)*6 # plot by time?
+  xPos = (canvas.width + (i+1)*6) - ((history.length+1)*6)
 
   ctx.beginPath();
-  ctx.arc((history.length)*10, ((snapshot.score - limits.lower) * scale) + padding, thickness, 0, 2 * Math.PI, false);
+  ctx.arc(xPos - 6, ((snapshot.score - yLimits.lower) * scale) + padding, thickness+1, 0, 2 * Math.PI, false);
   ctx.fillStyle = color;
   ctx.fill();
 
 
 
-Handlebars.registerHelper 'epochToDate', (epoch) -> new Date(epoch*1000);
 
 Template.post_list.posts = -> 
   collections.Posts.find({},{sort:{'latest._createdAt':-1,'latest.rank':1}}).fetch()
 
-Template.history_graph.rendered = -> 
-  console.log 'workig with', @
-  drawMovementGraph @.find('canvas'), @.data
+Template.post.subredditColor = -> helpers.generateColourFromString @.latest[subredditColorString]
+
+Template.post.thumbnailURL = -> if @.latest.thumbnail.indexOf('http') is 0 then @.latest.thumbnail
+
+Template.history_graph.rendered = ->  drawMovementGraph @.find('canvas'), @.data
+
+
+
+

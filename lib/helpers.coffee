@@ -1,11 +1,16 @@
 @helpers =
-  calculateHotness : (votes, created) ->
-    # s = ups - downs
-    # order = Math.log(Math.max(Math.abs(s), 1))
-    # sign = if s > 0 then 1 else if s < 0 is -1 else 0
-    # seconds = created - 1134028003
-    # return (order + sign * seconds / 45000).toFixed(7)
+  generateColourFromString: (str) ->
+    i = 0
+    hash = 0
+    while i < str.length
+      hash = str.charCodeAt(i++) + ((hash << 5) - hash)
+    i = 0
+    colour = "#"
+    while i < 3
+      colour += ("00" + ((hash >> i++ * 8) & 0xFF).toString(16)).slice(-2)
+    colour
 
+  calculateHotness : (votes, created) ->
     order = Math.log(Math.max(Math.abs(votes), 1)) / Math.LN10;
     sign = 0
     if votes > 0
