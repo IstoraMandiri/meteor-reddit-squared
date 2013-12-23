@@ -56,16 +56,14 @@ scrapeReddit = ->
 
 Meteor.startup -> 
 
-  nextTick = ->
-    nextMinute = Math.ceil(new Date()/(5 * 1000)) * (5 * 1000)
+  nextTick = (seconds) ->
+    nextMinute = Math.ceil(new Date()/(seconds * 1000)) * (seconds * 1000)
     return nextMinute - new Date()
 
-  scrapeCycle = ->
-    console.log 'nt:', nextTick(), ' || now:', new Date()
+  do scrapeCycle = ->
+    console.log 'nt:', nextTick(60), ' || now:', new Date()
     Meteor.setTimeout -> 
       try scrapeReddit() 
       scrapeCycle()
-    , nextTick() # default to 1 minute
-
-  scrapeCycle()
+    , nextTick 60 # default to 1 minute
 

@@ -1,6 +1,9 @@
-
-
-Handlebars.registerHelper 'epochToDate', (epoch) -> new Date(epoch*1000);
+Router.map ->
+  @route 'score-lines',
+    path: '/'
+    template: 'score_line_list'
+    data: 
+      posts: -> collections.Posts.find({},{sort:{'latest.rank':1}}).fetch()
 
 drawScoreLineGraph = (canvas, post) ->
   history = post.history?= []
@@ -52,7 +55,6 @@ drawScoreLineGraph = (canvas, post) ->
   ctx.fill();
 
 
-Template.score_line_list.posts = -> collections.Posts.find({},{sort:{'latest.rank':1}}).fetch()
 
 Template.score_line.subredditColor = -> helpers.generateColourFromString @.latest[CONFIG.subredditColorString]
 

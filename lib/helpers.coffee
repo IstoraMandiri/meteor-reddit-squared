@@ -21,3 +21,5 @@
     seconds = created - 1134028003;
     product = order + sign * seconds / 45000;
     return Math.round(product*10000000)/10000000;
+
+

@@ -1,9 +1,8 @@
 
-
-
 @collections = 
   Posts : new Meteor.Collection 'posts'
   Scrapes : new Meteor.Collection 'scrapes'
+
 
 if Meteor.isServer
 
@@ -12,8 +11,8 @@ if Meteor.isServer
     collections.Posts.find({},{sort:{'latest._createdAt':-1,'latest.rank':1},limit:limit})
 
 if Meteor.isClient
-  # public subscriptions
-  Deps.autorun ->
+
+  @subscriptions =
     Meteor.subscribe "frontPage" # lots
 
 
