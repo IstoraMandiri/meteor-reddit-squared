@@ -1,0 +1,24 @@
+
+<template name="score_line_list">
+  <div class="fade-out-contianer">
+    {{#each posts}}
+      {{> score_line}}
+    {{/each}}  
+  </div>
+</template>
+
+<template name="score_line">
+  <div class="score-line">
+    <div class='description'>{{latest.rank}}] {{latest.score}} <span style="color:{{subredditColor}};" class='subreddit'>{{latest.subreddit}}</span> <a target="_blank" href="{{latest.url}}">{{latest.title}}</a>
+    </div>
+    {{> score_line_graph .}}
+    <br>
+    {{#if thumbnailURL}}
+      <img class='score-line-thumbnail' src="{{thumbnailURL}}" alt="">
+    {{/if}}
+</template>
+
+<template name="score_line_graph">
+  <canvas class='history-graph'></canvas>
+</template>
+

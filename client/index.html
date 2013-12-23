@@ -7,30 +7,6 @@
 </body>
 
 <template name="body">
-  {{> post_list}}
-</template>
-
-
-<template name="post_list">
-  <div class="fade-out-contianer">
-  {{#each posts}}
-    {{> post}}
-  {{/each}}  
-  </div>
-</template>
-
-<template name="post">
-  <div class="post">
-    <div class='description'>{{latest.rank}}] {{latest.score}} <span style="color:{{subredditColor}};" class='subreddit'>{{latest.subreddit}}</span> <a target="_blank" href="{{latest.url}}">{{latest.title}}</a>
-    </div>
-    {{> history_graph .}}
-    <br>
-    {{#if thumbnailURL}}
-      <img class='post-thumbnail' src="{{thumbnailURL}}" alt="">
-    {{/if}}
-</template>
-
-<template name="history_graph">
-  <canvas class='history-graph'></canvas>
+  {{> score_line_list}}
 </template>
 

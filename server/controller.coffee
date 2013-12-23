@@ -53,9 +53,9 @@ scrapeReddit = ->
     _createdAt: theTime
 
 
-Meteor.startup ->
-  scrapeReddit()
-  Meteor.setInterval ->
-   scrapeReddit()
-  , 60 * 1000 # default to 1 minute
+# Meteor.startup ->
+#   scrapeReddit()
+#   Meteor.setInterval ->
+#    scrapeReddit()
+#   , 60 * 1000 # default to 1 minute
 

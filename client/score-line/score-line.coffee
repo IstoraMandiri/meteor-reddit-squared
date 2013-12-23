@@ -69,14 +69,14 @@ drawMovementGraph = (canvas, post) ->
 
 
 
-Template.post_list.posts = -> 
+Template.score_line_list.posts = -> 
   collections.Posts.find({},{sort:{'latest._createdAt':-1,'latest.rank':1}}).fetch()
 
-Template.post.subredditColor = -> helpers.generateColourFromString @.latest[subredditColorString]
+Template.score_line.subredditColor = -> helpers.generateColourFromString @.latest[subredditColorString]
 
-Template.post.thumbnailURL = -> if @.latest.thumbnail.indexOf('http') is 0 then @.latest.thumbnail
+Template.score_line.thumbnailURL = -> if @.latest.thumbnail.indexOf('http') is 0 then @.latest.thumbnail
 
-Template.history_graph.rendered = ->  drawMovementGraph @.find('canvas'), @.data
+Template.score_line_graph.rendered = ->  drawMovementGraph @.find('canvas'), @.data
 
 
 

@@ -1,27 +1,10 @@
-body{
-  background:black;
-  color:white;
-  margin:0;
-  font-family:'Helvetica Neue',Helvetica,sans-serif;
-}
-a{
-  color:white;
-}
-
-.fade-out-contianer{
-  width:100%;
-  height:100%;
-  overflow:hidden;
-  position:absolute;
-}
-
-.post{
+.score-line{
   position:relative;
   margin-bottom:-20px;
   canvas{
     margin-left:-20px;
   }
-  .post-thumbnail{
+  .score-line-thumbnail{
     display:none;
     position:absolute;
     z-index:1;
@@ -49,7 +32,7 @@ a{
   &:hover{
     background:#333;
     text-shadow:0px 1px 2px rgba(0,0,0,.6);
-    .description, .post-thumbnail{
+    .description, .score-line-thumbnail{
       display:block;
     }
   }
