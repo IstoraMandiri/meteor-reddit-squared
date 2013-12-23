@@ -44,7 +44,7 @@ drawMovementGraph = (canvas, post) ->
     # from right
     xPos = (canvas.width + (i+1)*6) - ((history.length+1)*6)
         
-    yPos = ((snapshot.score - yLimits.lower) * scale) + padding
+    yPos = canvas.height - (((snapshot.score - yLimits.lower) * scale) + padding)
     
     if i is 0 # first
       ctx.moveTo xPos, yPos
