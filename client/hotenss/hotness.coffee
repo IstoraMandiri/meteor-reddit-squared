@@ -5,7 +5,9 @@ Router.map ->
     data: 
       posts: -> collections.Posts.find({},{sort:{'latest.rank':1}}).fetch()
 
-Template.hotness_graph.rendered = ->  drawHotenssGraph @.find('canvas'), @.data.posts()
+Template.hotness_graph.lastScrape = -> collections.Scrapes.find({},{sort:{_createdAt:-1,limit:1}}).fetch()?[0]?._createdAt
+
+Template.hotness_graph.rendered = -> drawHotenssGraph @.find('canvas'), @.data.posts()
 
 drawHotenssGraph = (canvas, posts) ->
   $canvas = $(canvas)
@@ -59,8 +61,7 @@ drawHotenssGraph = (canvas, posts) ->
         ctx.moveTo xPos, yPos
       else
         ctx.lineTo xPos, yPos
- 
-      console.log 'x',xPos,'y',yPos
+
 
     ctx.stroke()
     ctx.closePath()
@@ -78,7 +79,7 @@ drawHotenssGraph = (canvas, posts) ->
     # add text
     ctx.font = 'bold 20px Helvetica Neue'
     ctx.textAlign = 'right'
-    ctx.fillText(post.latest.score, xPos-30, yPos+25)
+    ctx.fillText("#{post.latest.rank}] #{post.latest.score}", xPos-30, yPos+25)
 
 
 

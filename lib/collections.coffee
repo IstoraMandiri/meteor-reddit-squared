@@ -10,9 +10,12 @@ if Meteor.isServer
     limit = 25
     collections.Posts.find({},{sort:{'latest._createdAt':-1,'latest.rank':1},limit:limit})
 
+  Meteor.publish "latestScrape", -> collections.Scrapes.find({},{sort:{_createdAt:-1},limit:1})
+
 if Meteor.isClient
 
   @subscriptions =
-    Meteor.subscribe "frontPage" # lots
+    frontPage: Meteor.subscribe "frontPage" # lots
+    latestScrape: Meteor.subscribe "latestScrape" # lots
 
 
