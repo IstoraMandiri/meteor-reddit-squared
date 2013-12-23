@@ -8,6 +8,7 @@
     for field in fields
       if post[field] 
         result[field] = post[field]
+    result._s = new Date(result._createdAt).getSeconds()
     return result
 
 
@@ -26,6 +27,7 @@ insertFrame = (postData) ->
     collections.Posts.update({_id:postDocument._id},{$set:{latest:postData}})
   
   postDocumentId = postDocument._id || postDocument
+
   collections.Posts.update({_id:postDocumentId},{$push:{history:filters.historyPost postData}})
   return newInsert 
 
@@ -43,19 +45,14 @@ scrapeReddit = ->
     post.data._createdAt = theTime
     post.data.rank = i + 1
     post.data.hotness = helpers.calculateHotness post.data.score, post.data.created_utc
-
     
     if insertFrame post.data
       newPosts++
-
   collections.Scrapes.insert 
     totalPosts: totalPosts()
     newPosts: newPosts 
     recorded: req.result.body.data.children.length
     _createdAt: theTime
-
-  console.log 'completed scrape'
-
 
 Meteor.startup -> 
 
@@ -68,7 +65,6 @@ Meteor.startup ->
     Meteor.setTimeout -> 
       try scrapeReddit() 
       scrapeCycle()
-     
     , nextTick() # default to 1 minute
 
   scrapeCycle()

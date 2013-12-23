@@ -1,31 +1,22 @@
 
-subredditColorString = 'subreddit_id' # subreddit or +_id ?
 
 Handlebars.registerHelper 'epochToDate', (epoch) -> new Date(epoch*1000);
 
-drawMovementGraph = (canvas, post) ->
-  console.log 'drawing'
-  history = post.history
+drawScoreLineGraph = (canvas, post) ->
+  history = post.history?= []
   height = 50
   padding = 4
-  color = helpers.generateColourFromString post.latest[subredditColorString]
+  color = helpers.generateColourFromString post.latest[CONFIG.subredditColorString]
   thickness = 3
 
   ctx = canvas.getContext '2d' 
   canvas.width = $(canvas).parent().width()
   canvas.height = height
 
+  # draw line
   ctx.strokeStyle = color
   ctx.lineWidth = thickness
-
   ctx.beginPath();
-  
-  #
-  # for time based
-  #
-  # xLimits = 
-  #   first:
-  #   last:   
 
   yLimits =
     upper:0
@@ -40,24 +31,18 @@ drawMovementGraph = (canvas, post) ->
   scale = (canvas.height - padding*2) / limitDifference
 
   for snapshot, i in history
-    # from left
-    # xPos = (i+1)*6# plot by time please
-    # from right
     xPos = (canvas.width + (i+1)*6) - ((history.length+1)*6)
-        
     yPos = canvas.height - (((snapshot.score - yLimits.lower) * scale) + padding)
     
-    if i is 0 # first
+    if i is 0
       ctx.moveTo xPos, yPos
     else
       ctx.lineTo xPos, yPos
   
-
   ctx.stroke();
   ctx.closePath();
 
-  
-  # xPos = (history.length)*6 # plot by time?
+  # draw head
   xPos = (canvas.width + (i+1)*6) - ((history.length+1)*6) - 6
   yPos = canvas.height - (((history[history.length-1].score - yLimits.lower) * scale) + padding)
 
@@ -66,16 +51,14 @@ drawMovementGraph = (canvas, post) ->
   ctx.fillStyle = color;
   ctx.fill();
 
-  console.log 'completed drawing'
-
 
 Template.score_line_list.posts = -> collections.Posts.find({},{sort:{'latest.rank':1}}).fetch()
 
-Template.score_line.subredditColor = -> helpers.generateColourFromString @.latest[subredditColorString]
+Template.score_line.subredditColor = -> helpers.generateColourFromString @.latest[CONFIG.subredditColorString]
 
 Template.score_line.thumbnailURL = -> if @.latest.thumbnail.indexOf('http') is 0 then @.latest.thumbnail
 
-Template.score_line_graph.rendered = ->  drawMovementGraph @.find('canvas'), @.data
+Template.score_line_graph.rendered = ->  drawScoreLineGraph @.find('canvas'), @.data
 
 
 
