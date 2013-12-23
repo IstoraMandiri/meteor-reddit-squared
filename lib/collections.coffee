@@ -7,7 +7,7 @@
 if Meteor.isServer
 
   Meteor.publish "frontPage", ->
-    limit = 25
+    limit = 50
     collections.Posts.find({},{sort:{'latest._createdAt':-1,'latest.rank':1},limit:limit})
 
   Meteor.publish "latestScrape", -> collections.Scrapes.find({},{sort:{_createdAt:-1},limit:1})
