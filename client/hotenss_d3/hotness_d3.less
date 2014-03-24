@@ -4,7 +4,6 @@
   bottom:0;
   right:0;
   left:0;
-  background:white;
   
   .info{
     position:absolute;
@@ -15,10 +14,13 @@
   }
 
   .d3-canvas{
+    text{
+      fill: rgba(255,255,255,.6);
+    }
     .axis path,
     .axis line {
       fill: none;
-      stroke: #000;
+      stroke: rgba(255,255,255,.3);
       shape-rendering: crispEdges;
     }
 
@@ -28,7 +30,7 @@
 
     .line {
       fill: none;
-      stroke: black;
+      stroke: white;
       stroke-width: 3px;
     }
   }
@@ -37,7 +39,9 @@
 }
 
 
-
+.hover-line{
+  stroke: white;
+}
 
 
 // .score-line{

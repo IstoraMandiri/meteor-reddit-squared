@@ -10,6 +10,7 @@ Template.hotness_graph.lastScrape = -> collections.Scrapes.find({},{sort:{_creat
 Template.hotness_graph.rendered = -> drawHotenssGraph @.find('canvas'), @.data.posts()
 
 drawHotenssGraph = (canvas, posts) ->
+  console.log 'drawing graph'
   $canvas = $(canvas)
   
   padding = 50
